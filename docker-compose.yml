@@ -1,16 +1,21 @@
-version: "3"
+version: '3.8'
 
 services:
-  app:
+  fastapi-app:
+    container_name: api 
     build: .
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
     ports:
-      - "8000:8000"
+      - "8080:80"
     depends_on:
-      - mongodb
+      - mongo
 
-  mongodb:
-    image: "mongo:latest"
-    environment:
-      MONGO_INITDB_DATABASE: "API Wishlist"
-      MONGO_INITDB_ROOT_USERNAME: "raissabxdev"
-      MONGO_INITDB_ROOT_PASSWORD: "raissabxdev"
+
+  mongo:
+    container_name: mongo_host
+    image: "mongo:latest"  
+    ports:
+      - "27018:27017"
+    
+    volumes:
+      - ./mongo-data:/data/db  
