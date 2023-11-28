@@ -1,2 +1,2 @@
-run: 
-	@uvicorn main:app --reload --port 8000 --log-level trace
+run:
+	@uvicorn main:app --reload --port 8081 --log-level debug
