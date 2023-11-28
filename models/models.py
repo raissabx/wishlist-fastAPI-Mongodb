@@ -13,16 +13,9 @@ class CustomerModel(BaseModel):
     favorites: list = []
 
 
-
 class ProductModel(BaseModel):
     name_product: str
  
-
-
-# class WishlistModel(BaseModel):
-#     id_customer: str
-#     name_product: str
-# 
 
 
 
