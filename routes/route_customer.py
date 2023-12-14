@@ -1,6 +1,6 @@
 from typing import Dict
 from fastapi import APIRouter, HTTPException
-from models.models import CustomerModel
+from models.models import CustomerModel, CustomerOut
 from config.database import collection_customer, collection_product
 from bson.objectid import ObjectId
 
@@ -12,15 +12,17 @@ router = APIRouter()
         '/customer',
         tags=['customer'],
         summary = 'Cadastrar um cliente',
-        response_model = CustomerModel
+        response_model = CustomerOut
 )
-async def create_customer(customer: CustomerModel):
-    customer_dict = customer.dict()
+async def create_customer(customer: CustomerModel) -> CustomerOut:
+    customer_dict = customer.model_dump()
     
     if collection_customer.find_one({'email': customer_dict['email']}):
         raise HTTPException(status_code=400, detail='Customer already exists')
     
-    collection_customer.insert_one(customer_dict)
+    inserted_customer = collection_customer.insert_one(customer_dict)
+    customer_dict['id'] = str(inserted_customer.inserted_id)
+
     return customer_dict
 
 
@@ -40,13 +42,14 @@ async def get_all_customer():
         '/customer/{id}',
         tags=['customer'],
         summary = 'Consultar cliente por id',
-        response_model = CustomerModel
+        response_model = CustomerOut
 )
-async def get_customer(id: str):
+async def get_customer(id: str) -> CustomerOut:
     customer = collection_customer.find_one({'_id': ObjectId(id)})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
     
+    customer['id'] = id
     return customer
 
 @router.put(
@@ -56,7 +59,7 @@ async def get_customer(id: str):
         response_model = CustomerModel
 )
 async def update_customer(customer: CustomerModel, id: str):
-    customer_dict = customer.dict()
+    customer_dict = customer.model_dump()
     object_id = ObjectId(id)
 
     customer_in_db = collection_customer.find_one(
@@ -111,7 +114,7 @@ async def add_favorite(customer_id: str, name_product: str):
 
 
 @router.delete(
-        '/customer/{customer_id}/',
+        '/customer/{customer_id}/favorites/',
         tags=['wishlist'],
         summary = 'Deletar todos os itens da lista de favoritos',
         response_model = Dict[str, str]
@@ -144,7 +147,3 @@ async def remove_favorite(customer_id: str, name_product: str):
     
     collection_customer.update_one({'_id': ObjectId(customer_id)}, {'$pull': {'favorites': name_product}})
     return {'detail': 'Product removed from favorites successfully'}
-
-
-
-
