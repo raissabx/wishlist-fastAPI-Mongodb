@@ -1,0 +1,49 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+models/__pycache__/
+*.p
+
+# Virtual environments
+venv/
+env/
+*.env/
+listaFavorito/
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Test coverage
+htmlcov/
+.coverage
+.tox/
+
+# Distribution
+dist/
+build/
+*.egg-info/
+
+# Package files
+*.tar
+*.gz
+*.bz2
+*.zip
+
+# Pipenv
+Pipfile.lock
+
+# dotenv
+.env
+
+mongo-data/
