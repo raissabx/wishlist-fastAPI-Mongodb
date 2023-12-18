@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated
 from pydantic import BaseModel, Field, BeforeValidator
 
 
@@ -17,9 +17,3 @@ class CustomerOut(CustomerModel):
 
 class ProductModel(BaseModel):
     name_product: str
- 
-
-
-
-
-

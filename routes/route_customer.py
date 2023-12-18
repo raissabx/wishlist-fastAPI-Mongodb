@@ -16,10 +16,8 @@ router = APIRouter()
 )
 async def create_customer(customer: CustomerModel) -> CustomerOut:
     customer_dict = customer.model_dump()
-    
     if collection_customer.find_one({'email': customer_dict['email']}):
         raise HTTPException(status_code=400, detail='Customer already exists')
-    
     inserted_customer = collection_customer.insert_one(customer_dict)
     customer_dict['id'] = str(inserted_customer.inserted_id)
 
@@ -28,7 +26,7 @@ async def create_customer(customer: CustomerModel) -> CustomerOut:
 
 @router.get(
         '/customer',
-        tags=['customer'], 
+        tags=['customer'],
         summary = 'Consultar todos os clientes',
         response_model = list[CustomerModel]
 )
@@ -48,7 +46,7 @@ async def get_customer(id: str) -> CustomerOut:
     customer = collection_customer.find_one({'_id': ObjectId(id)})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
-    
+
     customer['id'] = id
     return customer
 
@@ -67,17 +65,17 @@ async def update_customer(customer: CustomerModel, id: str):
     )
     if not customer_in_db:
         raise HTTPException(status_code=404, detail='Customer not found')
-    
+
     if customer_in_db["email"] != customer_dict["email"]:
         customer_with_new_email = collection_customer.find_one(
             {"email": customer_dict["email"]}
         )
         if customer_with_new_email:
             raise HTTPException(status_code=400, detail='Email already in use')
-        
+
     collection_customer.update_one({'_id': object_id}, {'$set': customer_dict})
     return customer_dict
-    
+
 @router.delete(
     '/customer/{id}',
     tags=['customer'],
@@ -105,10 +103,10 @@ async def add_favorite(customer_id: str, name_product: str):
     product = collection_product.find_one({'name_product': name_product})
     if not product:
         raise HTTPException(status_code=404, detail='Product not found')
-    
+
     if name_product in customer['favorites']:
         raise HTTPException(status_code= 400, detail='Product already in favorites list')
-    
+
     collection_customer.update_one({'_id': ObjectId(customer_id)}, {'$push': {'favorites': name_product}})
     return {'detail': 'Product added to favorites successfully'}
 
@@ -123,7 +121,7 @@ async def remove_all_favorite(customer_id: str):
     customer = collection_customer.find_one({'_id': ObjectId(customer_id)})
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     collection_customer.update_one({'_id': ObjectId(customer_id)}, {'$set': {'favorites': []}})
     return {'detail': 'Favorites list cleared successfully'}
 
@@ -137,13 +135,13 @@ async def remove_favorite(customer_id: str, name_product: str):
     customer = collection_customer.find_one({'_id': ObjectId(customer_id)})
     if not customer:
         raise HTTPException(status_code=404, detail= 'Customer not found')
-    
+
     product = collection_product.find_one({'name_product': name_product})
     if not product:
         raise HTTPException(status_code= 404, detail= 'Product not found')
-    
+
     if name_product not in customer['favorites']:
         raise HTTPException(status_code=400, detail='Product not in favorites list')
-    
+
     collection_customer.update_one({'_id': ObjectId(customer_id)}, {'$pull': {'favorites': name_product}})
     return {'detail': 'Product removed from favorites successfully'}

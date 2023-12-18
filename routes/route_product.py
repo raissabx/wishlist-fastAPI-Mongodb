@@ -14,12 +14,11 @@ router = APIRouter()
         response_model = ProductModel
 )
 async def create_product(product: ProductModel):
-    product_dict = product.dict()
+    product_dict = product.model_dump()
     if collection_product.find_one(
         {'name_product': product_dict['name_product']}
     ):
         raise HTTPException(status_code=400, detail='Product already exists')
-    
     collection_product.insert_one(product_dict)
 
     return product_dict
@@ -48,5 +47,4 @@ async def delete_product(name_product: str):
     product = collection_product.find_one_and_delete({"name_product": name_product})
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
     return {"detail": "Product deleted successfully"}
