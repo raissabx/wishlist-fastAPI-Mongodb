@@ -2,7 +2,7 @@ from typing import Dict
 from fastapi import APIRouter, HTTPException
 from models.models import ProductModel
 from config.database import collection_product
-from bson.objectid import ObjectId
+
 
 
 router = APIRouter()
