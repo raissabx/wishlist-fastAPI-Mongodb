@@ -1,7 +1,9 @@
 from typing import Dict, List
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from auth.auth_user import verify_token
 from models.models import CustomerModel
 from config.database import collection_customer, collection_product
+from security.security import UserModel
 
 
 
@@ -13,7 +15,7 @@ router = APIRouter()
         summary = 'Cadastrar um cliente',
         response_model = CustomerModel
 )
-async def create_customer(customer: CustomerModel) -> CustomerModel:
+async def create_customer(customer: CustomerModel, token: dict = Depends(verify_token)) -> CustomerModel:
     customer_dict = customer.model_dump()
     if collection_customer.find_one({'email': customer_dict['email']}):
         raise HTTPException(status_code=400, detail='Customer already exists')
@@ -29,7 +31,7 @@ async def create_customer(customer: CustomerModel) -> CustomerModel:
         summary = 'Consultar todos os clientes',
         response_model = List[CustomerModel]
 )
-async def get_all_customer():
+async def get_all_customer(token: dict = Depends(verify_token)):
     customer_list = collection_customer.find()
     
     return customer_list
@@ -40,7 +42,7 @@ async def get_all_customer():
         summary = 'Consultar cliente por email',
         response_model = CustomerModel
 )
-async def get_customer(email: str) -> CustomerModel:
+async def get_customer(email: str, token: dict = Depends(verify_token)) -> CustomerModel:
     customer = collection_customer.find_one({'email': email})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
@@ -54,7 +56,7 @@ async def get_customer(email: str) -> CustomerModel:
         summary = 'Atualizar cliente pelo email',
         response_model = CustomerModel
 )
-async def update_customer(customer: CustomerModel, email: str):
+async def update_customer(customer: CustomerModel, email: str, token: dict = Depends(verify_token)):
     customer_dict = customer.model_dump()
     
     customer_in_db = collection_customer.find_one(
@@ -79,7 +81,7 @@ async def update_customer(customer: CustomerModel, email: str):
     summary = 'Deletar cliente',
     response_model = Dict[str, str]
 )
-async def delete_customer(email: str):
+async def delete_customer(email: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one_and_delete({"email": email})
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -92,7 +94,7 @@ async def delete_customer(email: str):
         summary = 'Adicionar item na lista de favoritos',
         response_model = Dict[str, str]
 )
-async def add_favorite(customer_email: str, name_product: str):
+async def add_favorite(customer_email: str, name_product: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
@@ -114,7 +116,7 @@ async def add_favorite(customer_email: str, name_product: str):
         summary = 'Deletar todos os itens da lista de favoritos',
         response_model = Dict[str, str]
 )
-async def remove_all_favorite(customer_email: str):
+async def remove_all_favorite(customer_email: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -128,7 +130,7 @@ async def remove_all_favorite(customer_email: str):
     summary= 'Remover um item da lista de favoritos',
     response_model = Dict[str, str]
 )
-async def remove_favorite(customer_email: str, name_product: str):
+async def remove_favorite(customer_email: str, name_product: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail= 'Customer not found')

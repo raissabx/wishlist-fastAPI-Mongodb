@@ -1,5 +1,6 @@
+import re
 from typing import Annotated, Optional
-from pydantic import BaseModel, Field, BeforeValidator
+from pydantic import BaseModel, Field, BeforeValidator, validator
 
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -21,4 +22,3 @@ class ProductAPIModel(BaseModel):
     price: float
     review: Optional[str] = None
     
-

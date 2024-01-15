@@ -1,6 +1,7 @@
 from typing import Dict
 import uuid
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from auth.auth_user import verify_token
 from models.models import ProductAPIModel, CustomerModel
 import requests
 from config.database import collection_customer
@@ -14,7 +15,7 @@ router = APIRouter()
         summary = 'Consultar todos os produtos por páginas',
         response_model = list[ProductAPIModel]
 )
-async def get_all_product(page: int):
+async def get_all_product(page: int, token: dict = Depends(verify_token)):
     API_URL = f'http://challenge-api.luizalabs.com/api/product/?page={page}'
     response = requests.get(API_URL)
 
@@ -31,7 +32,7 @@ async def get_all_product(page: int):
         summary = 'Consultar todos os produtos por id',
         response_model = ProductAPIModel
 )
-async def get_product_id(id: str):
+async def get_product_id(id: str, token: dict = Depends(verify_token)):
     API_URL = f'http://challenge-api.luizalabs.com/api/product/{id}/'
     response = requests.get(API_URL)
 
@@ -45,7 +46,7 @@ async def get_product_id(id: str):
 
     return product_api
 
-def verify_product_exists(id: str):
+def verify_product_exists(id: str, token: dict = Depends(verify_token)):
     try:
         get_product_id(id)
         return True
@@ -64,8 +65,7 @@ def verify_product_exists(id: str):
         summary = 'Adicionar item na lista de favoritos',
         response_model = Dict[str, str]
 )
-async def add_favorite_product(product_id: str
-                               , customer_email: str):
+async def add_favorite_product(product_id: str, customer_email: str, token: dict = Depends(verify_token)):
 
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
@@ -91,7 +91,7 @@ async def add_favorite_product(product_id: str
         summary = 'Deletar todos os itens da lista de favoritos',
         response_model = Dict[str, str]
 )
-async def remove_all_favorite(customer_email: str):
+async def remove_all_favorite(customer_email: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -105,7 +105,7 @@ async def remove_all_favorite(customer_email: str):
     summary= 'Remover um item da lista de favoritos',
     response_model = Dict[str, str]
 )
-async def remove_favorite(customer_email: str, product_id: str):
+async def remove_favorite(customer_email: str, product_id: str, token: dict = Depends(verify_token)):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail= 'Customer not found')
