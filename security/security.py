@@ -1,5 +1,5 @@
 import re
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator, validator
 from passlib.context import CryptContext
 
 SECRET_KEY = "7cf3b4a0f8c543e45cb100d16582eadc7a24de5f08d5574fe6ce40bd51ecdb2b"
@@ -13,7 +13,7 @@ class UserModel(BaseModel):
     username: str
     password: str
 
-    @validator('username')
+    @field_validator('username')
     def validate_username(cls, value):
         if not re.match('^([a-z]|[0-9]|@|.)+$', value):
             raise ValueError('Username format invalid')

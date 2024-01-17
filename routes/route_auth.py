@@ -45,5 +45,3 @@ async def login_for_access_token2(form_data: Annotated[OAuth2PasswordRequestForm
     return {'access_token': create_jwt_token(token_data), 'token_type': 'bearer'}
 
     
-#  = Depends(oauth2_scheme)
-# = Depends(get_current_user)

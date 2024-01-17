@@ -13,5 +13,3 @@ app.include_router(router_product)
 app.include_router(router_product_api)
 app.include_router(router_auth)
 
-
-API_URL = 'http://challenge-api.luizalabs.com/api/product/<ID>/'
