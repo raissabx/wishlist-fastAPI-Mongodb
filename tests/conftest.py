@@ -7,7 +7,6 @@ import pytest
 from main import app
 from auth.auth_user import create_jwt_token
 
-
 fake = Faker()
 
 @pytest.fixture()

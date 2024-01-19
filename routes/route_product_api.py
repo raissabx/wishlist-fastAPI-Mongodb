@@ -8,6 +8,17 @@ from config.database import collection_customer
 
 router = APIRouter()
 
+def verify_product_exists(id: str, token: dict = Depends(verify_token)):
+    try:
+        get_product_id(id)
+        return True
+    
+    except HTTPException as e:
+
+        if e.status_code == 404:
+            return False
+        
+        raise e
 
 @router.get(
         '/product_api/{page}',
@@ -45,19 +56,6 @@ async def get_product_id(id: str, token: dict = Depends(verify_token)):
         raise HTTPException(status_code=404, detail='Product not found')
 
     return product_api
-
-def verify_product_exists(id: str, token: dict = Depends(verify_token)):
-    try:
-        get_product_id(id)
-        return True
-    
-    except HTTPException as e:
-
-        if e.status_code == 404:
-            return False
-        
-        raise e
-    
 
 @router.put(
         '/product_api/{customer_email}/{product_id}/',
