@@ -51,7 +51,7 @@ async def get_customer(email: str, token: dict = Depends(verify_token)) -> Custo
     return customer
 
 @router.put(
-        '/customer/{email}',
+        '/customer/{email}/update',
         tags=['customer'],
         summary = 'Atualizar cliente pelo email',
         response_model = CustomerModel
@@ -76,7 +76,7 @@ async def update_customer(customer: CustomerModel, email: str, token: dict = Dep
     return customer_dict
 
 @router.delete(
-    '/customer/{email}',
+    '/customer/{email}/delete',
     tags=['customer'],
     summary = 'Deletar cliente',
     response_model = Dict[str, str]

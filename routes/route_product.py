@@ -9,7 +9,7 @@ from config.database import collection_product
 router = APIRouter()
 
 @router.post(
-        '/product',
+        '/product/create',
         tags = ['product'],
         summary = 'Cadastrar produto',
         response_model = ProductModel

@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Path, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from security.security import UserModel, password_hasher
 from auth.auth_user import get_user
@@ -25,17 +25,17 @@ async def create_user(user: UserModel):
 
 
 @router.post(
-        '/token',
+        '/token/login',
         tags=['authentication'],
         summary = 'Autenticar e obter token',
         response_model = None,
         include_in_schema = False
 )
-async def login_for_access_token2(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     username = form_data.username
     password = form_data.password
     user = await get_user(username)
-    if not user or not verify_password(password, user['password']):
+    if not verify_password(password, user['password']):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid credentials',
