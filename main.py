@@ -12,4 +12,3 @@ app.include_router(router_customer)
 app.include_router(router_product)
 app.include_router(router_product_api)
 app.include_router(router_auth)
-

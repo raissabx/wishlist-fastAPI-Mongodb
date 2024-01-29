@@ -12,26 +12,27 @@ router = APIRouter()
 @router.post(
         '/auth',
         tags=['authentication'],
-        summary = 'Criar usuário',
-        response_model = UserModel
+        summary='Criar usuário',
+        response_model=UserModel
 )
 async def create_user(user: UserModel):
     user_dict = user.model_dump()
     user_dict['password'] = password_hasher.hash(user_dict['password'])
-    result = collection_auth.insert_one(user_dict)
+    collection_auth.insert_one(user_dict)
 
     return user
-
 
 
 @router.post(
         '/token/login',
         tags=['authentication'],
-        summary = 'Autenticar e obter token',
-        response_model = None,
-        include_in_schema = False
+        summary='Autenticar e obter token',
+        response_model=None,
+        include_in_schema=False
 )
-async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+):
     username = form_data.username
     password = form_data.password
     user = await get_user(username)
@@ -42,6 +43,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
             headers={'WWW-Authenticate': 'Bearer'}
         )
     token_data = {'sub': username}
-    return {'access_token': create_jwt_token(token_data), 'token_type': 'bearer'}
-
-    
+    return {
+        'access_token': create_jwt_token(token_data),
+        'token_type': 'bearer'
+    }
