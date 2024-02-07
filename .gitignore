@@ -43,7 +43,4 @@ build/
 # Pipenv
 Pipfile.lock
 
-# dotenv
-.env
-
 mongo-data/

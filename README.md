@@ -5,7 +5,7 @@
 Este projeto trata de APIs RESTful, operações CRUD e integração com banco de dados não-relacional usando Python para criação de uma lista de favoritos.
 
 ## Requisitos
-Certifique-se de ter o Python 3.10 ou superior instalado. Você pode instalar as dependências do projeto utilizando o arquivo requirements.txt. Execute o seguinte comando:
+Certifique-se de ter o Python 3.10 ou superior instalado. Você pode instalar as dependências do projeto utilizando o arquivo requirements.txt.
 
 * [python >= 3.10](https://www.python.org/)
 * [pyenv](https://github.com/pyenv/pyenv)
@@ -70,16 +70,16 @@ Certifique-se de ter um servidor MongoDB em execução. O Docker Compose irá ge
 Para construir e iniciar os contêineres do Docker, execute o seguinte comando na raiz do projeto, onde se encontra o arquivo docker-compose.yml:
 
 
-```docker-compose up --build```
+```docker-compose up -d```
 
 Isso iniciará o contêiner FastAPI e o contêiner MongoDB. O FastAPI estará disponível em:
-http://localhost:8080.
+http://localhost:8081.
 
 Você pode acessar a documentação interativa da API em:
-http://localhost:8080/docs 
+http://localhost:8081/docs 
 
 e a interface alternativa em:
-http://localhost:8080/redoc
+http://localhost:8081/redoc
 
 
 ### Iniciar o servidor FastAPI
