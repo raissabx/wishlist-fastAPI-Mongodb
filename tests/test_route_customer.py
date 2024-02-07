@@ -59,7 +59,7 @@ class TestCustomer:
         try:
             mock_verify_token.return_value = mock_create_jwt_token
             test_app.post(
-                '/product',
+                '/product/create',
                 json=product,
                 headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
             )
@@ -71,8 +71,30 @@ class TestCustomer:
     async def favorites_fixture_post(
         self,
         mock_create_jwt_token,
-        mock_verify_token, test_app
+        mock_verify_token, 
+        test_app
     ):
+        product = ProductModel(
+            name_product='geladeira'
+        ).model_dump()
+        mock_verify_token.return_value = mock_create_jwt_token
+        test_app.post(
+            '/product/create',
+            json=product,
+            headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
+        )
+
+        product_second = ProductModel(
+            name_product='fogão'
+        ).model_dump()
+
+        mock_verify_token.return_value = mock_create_jwt_token
+        test_app.post(
+            '/product/create',
+            json=product_second,
+            headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
+        )
+
         customer = CustomerModel(
             name_customer=f.name(),
             email=f.email(),
@@ -90,6 +112,8 @@ class TestCustomer:
             yield customer
         finally:
             collection_customer.delete_one({'email': customer['email']})
+            collection_customer.delete_one({'name_product': product})
+            collection_customer.delete_one({'name_product': product_second})
 
     def test_create_customer(
             self,

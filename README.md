@@ -53,19 +53,6 @@ Com a virtual environment ativada, você pode usar o pip para instalar pacotes R
 
 ```pip install -r requirements.txt```
 
-
-### Configurar as credenciais e a URI de conexão
-
-Você pode configurar as credenciais e a URI de conexão no arquivo de configuração .env.
-
-Exemplo de .env:
-
-```MONGODB_URI=mongodb://localhost:27017/```
-
-```MONGODB_DB=meu_banco_de_dados```
-
-Certifique-se de ter um servidor MongoDB em execução. O Docker Compose irá gerenciar isso para você, mas é importante que você saiba que o serviço MongoDB está configurado para usar a porta 27018.
-
 ## Como usar
 Para construir e iniciar os contêineres do Docker, execute o seguinte comando na raiz do projeto, onde se encontra o arquivo docker-compose.yml:
 

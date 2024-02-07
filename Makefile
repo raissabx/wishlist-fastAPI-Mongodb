@@ -8,3 +8,9 @@ clear:
 	@find . -name "*.DS_Store" | xargs rm -rf
 	@find . -name "__pycache__" -type d | xargs rm -rf
 	@find . -name "*.cache" -type d | xargs rm -rf
+
+test:
+	@pytest
+
+test-matching:
+	@pytest -x $(X) -k $(K)
