@@ -24,8 +24,8 @@ def verify_product_exists(id: str, token: dict = Depends(verify_token)):
 
 
 @router.get(
-        '/product_api/{page}',
-        tags=['product_api'],
+        '/products_api/{page}',
+        tags=['products_api'],
         summary='Consultar todos os produtos por páginas',
         response_model=list[ProductAPIModel]
 )
@@ -45,8 +45,8 @@ async def get_all_product(page: int, token: dict = Depends(verify_token)):
 
 
 @router.get(
-        '/product_api/{id}/',
-        tags=['product_api'],
+        '/products_api/{id}/',
+        tags=['products_api'],
         summary='Consultar todos os produtos por id',
         response_model=ProductAPIModel
 )
@@ -68,7 +68,7 @@ async def get_product_id(id: str, token: dict = Depends(verify_token)):
 
 
 @router.put(
-        '/product_api/{customer_email}/{product_id}/',
+        '/products_api/{customer_email}/{product_id}/',
         tags=['wishlist_api'],
         summary='Adicionar item na lista de favoritos',
         response_model=Dict[str, str]
@@ -101,7 +101,7 @@ async def add_favorite_product(
 
 
 @router.delete(
-        '/product_api/{customer_email}/remove_favorite/',
+        '/products_api/{customer_email}',
         tags=['wishlist_api'],
         summary='Deletar todos os itens da lista de favoritos',
         response_model=Dict[str, str]
@@ -122,9 +122,9 @@ async def remove_all_favorite(
 
 
 @router.delete(
-    '/product_api/{customer_email}/remove_favorite/{product_id}',
+    '/products_api/{customer_email}/remove_favorites/{product_id}',
     tags=['wishlist_api'],
-    summary='Remover um item da lista de favoritos',
+    summary='Remover item da lista de favoritos',
     response_model=Dict[str, str]
 )
 async def remove_favorite(

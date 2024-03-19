@@ -8,9 +8,9 @@ router = APIRouter()
 
 
 @router.post(
-        '/product/create',
-        tags=['product'],
-        summary='Cadastrar produto',
+        '/products',
+        tags=['products'],
+        summary='Cadastrar produtos',
         response_model=ProductModel
 )
 async def create_product(
@@ -28,8 +28,8 @@ async def create_product(
 
 
 @router.get(
-        '/product',
-        tags=['product'],
+        '/products',
+        tags=['products'],
         summary='Consultar todos os produtos',
         response_model=list[ProductModel]
 )
@@ -41,9 +41,9 @@ async def get_product(token: dict = Depends(verify_token)):
 
 
 @router.delete(
-    '/product/{name_product}',
-    tags=['product'],
-    summary='Deletar produto',
+    '/products/{name_product}',
+    tags=['products'],
+    summary='Deletar produtos',
     response_model=Dict[str, str]
 )
 async def delete_product(

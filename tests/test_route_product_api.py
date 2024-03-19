@@ -41,7 +41,7 @@ class TestProductAPI:
         try:
             mock_verify_token.return_value = mock_create_jwt_token
             test_app.post(
-                '/customer',
+                '/customers',
                 json=customer,
                 headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
             )
@@ -57,7 +57,7 @@ class TestProductAPI:
     ):
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.get(
-            '/product_api/1',
+            '/products_api/1',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
         assert response.status_code == HTTPStatus.OK
@@ -69,11 +69,12 @@ class TestProductAPI:
             mock_create_jwt_token,
             create_product
     ):
+        
         product_id = create_product['id']
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.get(
-            f'/product_api/{product_id}/',
+            f'/products_api/{product_id}/',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
         assert response.status_code == 200
@@ -91,7 +92,7 @@ class TestProductAPI:
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.put(
-            f'/product_api/{customer_email}/{product_id}/',
+            f'/products_api/{customer_email}/{product_id}/',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
@@ -112,13 +113,13 @@ class TestProductAPI:
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.put(
-            f'/product_api/{customer_email}/{product_id}/',
+            f'/products_api/{customer_email}/{product_id}/',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.delete(
-            f'/product_api/{customer_email}/remove_favorite/',
+            f'/products_api/{customer_email}',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
@@ -143,13 +144,13 @@ class TestProductAPI:
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.put(
-            f'/product_api/{customer_email}/{product_id}/',
+            f'/products_api/{customer_email}/{product_id}/',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.delete(
-            f'/product_api/{customer_email}/remove_favorite/{product_id}',
+            f'/products_api/{customer_email}/remove_favorites/{product_id}',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 

@@ -32,7 +32,7 @@ class TestProduct:
         try:
             mock_verify_token.return_value = mock_create_jwt_token
             test_app.post(
-                '/product/create',
+                '/products',
                 json=product_fixture,
                 headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
             )
@@ -51,7 +51,7 @@ class TestProduct:
     ):
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.post(
-            '/product/create',
+            '/products',
             json=product_fixture,
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
@@ -69,7 +69,7 @@ class TestProduct:
     ):
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.get(
-            '/product',
+            '/products',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
@@ -86,7 +86,7 @@ class TestProduct:
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.delete(
-            f'/product/{name_product}',
+            f'/products/{name_product}',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 

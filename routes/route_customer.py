@@ -9,9 +9,9 @@ router = APIRouter()
 
 
 @router.post(
-        '/customer',
-        tags=['customer'],
-        summary='Cadastrar um cliente',
+        '/customers',
+        tags=['customers'],
+        summary='Cadastrar clientes',
         response_model=CustomerModel
 )
 async def create_customer(
@@ -28,8 +28,8 @@ async def create_customer(
 
 
 @router.get(
-        '/customer',
-        tags=['customer'],
+        '/customers',
+        tags=['customers'],
         summary='Consultar todos os clientes',
         response_model=List[CustomerModel]
 )
@@ -39,9 +39,9 @@ async def get_all_customer(token: dict = Depends(verify_token)):
 
 
 @router.get(
-        '/customer/{email}',
-        tags=['customer'],
-        summary='Consultar cliente por email',
+        '/customers/{email}',
+        tags=['customers'],
+        summary='Consultar clientes por email',
         response_model=CustomerModel
 )
 async def get_customer(
@@ -57,9 +57,9 @@ async def get_customer(
 
 
 @router.put(
-        '/customer/{email}/update',
-        tags=['customer'],
-        summary='Atualizar cliente pelo email',
+        '/customers/{email}',
+        tags=['customers'],
+        summary='Atualizar clientes pelo email',
         response_model=CustomerModel
 )
 async def update_customer(
@@ -86,9 +86,9 @@ async def update_customer(
 
 
 @router.delete(
-    '/customer/{email}/delete',
-    tags=['customer'],
-    summary='Deletar cliente',
+    '/customers/{email}',
+    tags=['customers'],
+    summary='Deletar clientes',
     response_model=Dict[str, str]
 )
 async def delete_customer(email: str, token: dict = Depends(verify_token)):
@@ -99,7 +99,7 @@ async def delete_customer(email: str, token: dict = Depends(verify_token)):
 
 
 @router.put(
-        '/customer/{customer_email}/add_favorite/{name_product}',
+        '/customers/{customer_email}/add_favorites/{name_product}',
         tags=['wishlist'],
         summary='Adicionar item na lista de favoritos',
         response_model=Dict[str, str]
@@ -131,7 +131,7 @@ async def add_favorite(
 
 
 @router.delete(
-        '/customer/{customer_email}/favorites/',
+        '/customers/{customer_email}/favorites/',
         tags=['wishlist'],
         summary='Deletar todos os itens da lista de favoritos',
         response_model=Dict[str, str]
@@ -152,7 +152,7 @@ async def remove_all_favorite(
 
 
 @router.delete(
-    '/customer/{customer_email}/remove_favorite/{name_product}',
+    '/customers/{customer_email}/remove_favorites/{name_product}',
     tags=['wishlist'],
     summary='Remover um item da lista de favoritos',
     response_model=Dict[str, str]
