@@ -99,25 +99,25 @@ async def delete_customer(email: str, token: dict = Depends(verify_token)):
 
 
 @router.put(
-        '/customers/{customer_email}/add_favorites/{name_product}',
+        '/customers/{customer_email}/add_favorites/{id_product}',
         tags=['wishlist'],
         summary='Adicionar item na lista de favoritos',
         response_model=Dict[str, str]
 )
 async def add_favorite(
     customer_email: str,
-    name_product: str,
+    id_product: str,
     token: dict = Depends(verify_token)
 ):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
 
-    product = collection_product.find_one({'name_product': name_product})
+    product = collection_product.find_one({'id': id_product})
     if not product:
         raise HTTPException(status_code=404, detail='Product not found')
 
-    if name_product in customer['favorites']:
+    if id_product in customer['favorites']:
         raise HTTPException(
             status_code=400,
             detail='Product already in favorites list'
@@ -125,7 +125,7 @@ async def add_favorite(
 
     collection_customer.update_one(
         {'email': customer_email},
-        {'$push': {'favorites': name_product}}
+        {'$push': {'favorites': id_product}}
     )
     return {'detail': 'Product added to favorites successfully'}
 
@@ -152,25 +152,25 @@ async def remove_all_favorite(
 
 
 @router.delete(
-    '/customers/{customer_email}/remove_favorites/{name_product}',
+    '/customers/{customer_email}/remove_favorites/{id_product}',
     tags=['wishlist'],
     summary='Remover um item da lista de favoritos',
     response_model=Dict[str, str]
 )
 async def remove_favorite(
     customer_email: str,
-    name_product: str,
+    id_product: str,
     token: dict = Depends(verify_token)
 ):
     customer = collection_customer.find_one({'email': customer_email})
     if not customer:
         raise HTTPException(status_code=404, detail='Customer not found')
 
-    product = collection_product.find_one({'name_product': name_product})
+    product = collection_product.find_one({'id': id_product})
     if not product:
         raise HTTPException(status_code=404, detail='Product not found')
 
-    if name_product not in customer['favorites']:
+    if id_product not in customer['favorites']:
         raise HTTPException(
             status_code=400,
             detail='Product not in favorites list'
@@ -178,6 +178,6 @@ async def remove_favorite(
 
     collection_customer.update_one(
         {'email': customer_email},
-        {'$pull': {'favorites': name_product}}
+        {'$pull': {'favorites': id_product}}
     )
     return {'detail': 'Product removed from favorites successfully'}

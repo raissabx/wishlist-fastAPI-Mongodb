@@ -18,6 +18,7 @@ class TestProduct:
     @pytest.fixture
     def product_fixture(self):
         return ProductModel(
+            id = f.uuid4(),
             name_product=f.word()
         ).model_dump()
 
@@ -39,7 +40,7 @@ class TestProduct:
             yield product_fixture
         finally:
             collection_product.delete_one(
-                {'name_product': product_fixture['name_product']}
+                {'id': product_fixture['id']}
             )
 
     def test_create_product(
@@ -75,6 +76,23 @@ class TestProduct:
 
         assert response.status_code == 200
 
+    def test_get_product_id(
+            self,
+            test_app,
+            mock_verify_token,
+            mock_create_jwt_token,
+            product_fixture_post
+    ):
+        id = product_fixture_post['id']
+
+        mock_verify_token.return_value = mock_create_jwt_token
+        response = test_app.get(
+            f'/products/{id}',
+            headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
+        )
+        assert response.status_code == 200
+        assert response.json()['id'] == id
+
     def test_delete_product(
             self,
             test_app,
@@ -82,17 +100,17 @@ class TestProduct:
             mock_verify_token,
             product_fixture_post
     ):
-        name_product = product_fixture_post['name_product']
+        id = product_fixture_post['id']
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.delete(
-            f'/products/{name_product}',
+            f'/products/{id}',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
         assert response.status_code == 200
         customer_db = collection_product.find_one(
-            {'name_product': name_product}
+            {'id': id}
         )
         assert customer_db is None
         assert response.json()['detail'] == 'Product deleted successfully'

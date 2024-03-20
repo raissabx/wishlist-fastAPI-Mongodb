@@ -53,6 +53,7 @@ class TestCustomer:
         test_app
     ):
         product = ProductModel(
+            id = '1000',
             name_product='celular'
         ).model_dump()
 
@@ -65,7 +66,7 @@ class TestCustomer:
             )
             yield product
         finally:
-            collection_customer.delete_one({'name_product': product})
+            collection_customer.delete_one({'id': product['id']})
 
     @pytest.fixture
     async def favorites_fixture_post(
@@ -75,8 +76,10 @@ class TestCustomer:
         test_app
     ):
         product = ProductModel(
+            id = '2000',
             name_product='geladeira'
         ).model_dump()
+
         mock_verify_token.return_value = mock_create_jwt_token
         test_app.post(
             '/products',
@@ -85,6 +88,7 @@ class TestCustomer:
         )
 
         product_second = ProductModel(
+            id = '3000',
             name_product='fogão'
         ).model_dump()
 
@@ -98,7 +102,7 @@ class TestCustomer:
         customer = CustomerModel(
             name_customer=f.name(),
             email=f.email(),
-            favorites=['geladeira', 'fogão']
+            favorites=['2000', '3000']
         ).model_dump()
 
         try:
@@ -112,8 +116,8 @@ class TestCustomer:
             yield customer
         finally:
             collection_customer.delete_one({'email': customer['email']})
-            collection_customer.delete_one({'name_product': product})
-            collection_customer.delete_one({'name_product': product_second})
+            collection_customer.delete_one({'id': product['id']})
+            collection_customer.delete_one({'id': product_second['id']})
 
     def test_create_customer(
             self,
@@ -226,11 +230,11 @@ class TestCustomer:
             product_fixture_post
     ):
         customer_email = customer_fixture_post['email']
-        name_product = product_fixture_post['name_product']
+        id_product = product_fixture_post['id']
 
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.put(
-            f'/customers/{customer_email}/add_favorites/{name_product}',
+            f'/customers/{customer_email}/add_favorites/{id_product}',
             json={},
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
@@ -238,7 +242,7 @@ class TestCustomer:
         assert response.status_code == 200
         assert response.json()['detail'] == 'Product added to favorites successfully'  # noqa
         customer_db = collection_customer.find_one({'email': customer_email})
-        assert customer_db['favorites'] == [name_product]
+        assert customer_db['favorites'] == [id_product]
 
     def test_remove_all_favorite(
             self,
@@ -266,14 +270,14 @@ class TestCustomer:
             favorites_fixture_post
     ):
         customer_email = favorites_fixture_post['email']
-        product_name = 'geladeira'
+        id_product = '2000'
         mock_verify_token.return_value = mock_create_jwt_token
         response = test_app.delete(
-            f'/customers/{customer_email}/remove_favorites/{product_name}',
+            f'/customers/{customer_email}/remove_favorites/{id_product}',
             headers={'Authorization': f'Bearer {mock_create_jwt_token}'}
         )
 
         assert response.status_code == 200
         customer_db = collection_customer.find_one({'email': customer_email})
-        assert customer_db['favorites'] == ['fogão']
+        assert customer_db['favorites'] == ['3000']
         assert response.json()['detail'] == 'Product removed from favorites successfully'  # noqa

@@ -12,6 +12,7 @@ class CustomerModel(BaseModel):
 
 
 class ProductModel(BaseModel):
+    id: str
     name_product: str
 
 
