@@ -91,21 +91,22 @@ Exemplo:
 ## Endpoints
 
 #### Customer
-* GET /customer: Consulta todos os clientes/customer.
-* POST /customer: Cadastrar um cliente/customer.
-* GET /customer/{email}: Consulta cliente por email.
-* PUT /customer/{email}/update: Atualiza cliente por email.
-* DELETE /customer/{email}/delete: Remove um cliente por email.
+* GET /customers: Consultar todos os clientes.
+* POST /customers: Cadastrar um clientes.
+* GET /customers/{email}: Consultar clientes por email.
+* PUT /customers/{email}/update: Atualizar clientes.
+* DELETE /customers/{email}: Remover clientes.
 
 #### Wishlist
-* PUT /customer/{customer_email}/add_favorite/{name_product}: Adiciona item na lista de favoritos.
+* PUT /customers/{customer_email}/add_favorites/{id_product}: Adicionar item na lista de favoritos.
 * DELETE /customer/{customer_email}/favorites: Deletar todos os itens da lista de favoritos.
-* DELETE /{customer_email}/remove_favorite/{name_product}: Deletar um itens da lista de favoritos.
+* DELETE /customers/{customer_email}/remove_favorites/{id_product}: Deletar um itens da lista de favoritos.
 
 #### Product
-* POST /product/create: Cadastrar produto.
-* GET /product: Consultar todos os produtos.
-* DELETE /product/{name_product}: Deletar produto.
+* POST /products: Cadastrar produtos.
+* GET /products: Consultar todos os produtos.
+* GET /products/{id}: Consultar produtos pelo id.
+* DELETE /products/{id}: Deletar produtos.
 
 #### Product API
 * GET /product_api/{page}: Consultar todos os produtos por página.
